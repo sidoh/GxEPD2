@@ -32,6 +32,7 @@ class GxEPD2_GFX : public Adafruit_GFX
     virtual void init(uint32_t serial_diag_bitrate, bool initial, bool pulldown_rst_mode = false) = 0;
     virtual void fillScreen(uint16_t color) = 0; // 0x0 black, >0x0 white, to buffer
     virtual void display(bool partial_update_mode = false) = 0;
+    virtual void displayWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h) = 0;
     virtual void setFullWindow() = 0;
     // setPartialWindow, use parameters according to actual rotation.
     // x and w should be multiple of 8, for rotation 0 or 2,
