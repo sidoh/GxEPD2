@@ -13,6 +13,8 @@
 - 4k7/10k resistor divider may not work with flat cable extensions or Waveshare 4.2 board, use level converter then
 - do not forget to connect GND
 - the actual Waveshare display boards now have level converters and series regulator, safe for 5V
+- use 4k7 pull-down on SS for ESP8266 for boards with level converters
+- note that 7.5" e-paper displays don't work reliable if fed from 3.3V Arduino pin
 
 ### Paged Drawing, Picture Loop
  - This library uses paged drawing to limit RAM use and cope with missing single pixel update support
@@ -47,27 +49,65 @@
 - https://github.com/olikraus/u8glib/wiki/tpictureloop
 
 ### Supported SPI e-paper panels from Good Display:
-- GDEP015OC1      1.54" b/w
-- GDEW0154Z04   1.54" b/w/r 200x200
-- GDE0213B1         2.13" b/w
-- GDEH0213B72       2.13" b/w, replacement for GDE0213B1
+- GDEP015OC1     1.54" b/w
+- GDEW0154Z04    1.54" b/w/r 200x200
+- GDE0213B1      2.13" b/w
+- GDEH0213B72    2.13" b/w, replacement for GDE0213B1
+- GDEH0213B73    2.13" b/w, new replacement for GDE0213B1, GDEH0213B72
 - GDEW0213I5F    2.13" b/w flexible
-- GDEW0213Z16   2.13" b/w/r
-- GDEH029A1        2.9" b/w
-- GDEW029T5       2.9" b/w
+- GDEW0213Z16    2.13" b/w/r
+- GDEH029A1      2.9" b/w
+- GDEW029T5      2.9" b/w
 - GDEW029Z10     2.9" b/w/r
+- GDEW026T0      2.6" b/w
 - GDEW027C44     2.7" b/w/r
 - GDEW027W3      2.7" b/w
-- GDEW042T2        4.2" b/w
-- GDEW042Z15      4.2" b/w/r
-- GDEW0583T7      5.83" b/w
-- GDEW075T8        7.5" b/w
-- GDEW075Z09      7.5" b/w/r
+- GDEW0371W7     3.7" b/w
+- GDEW042T2      4.2" b/w
+- GDEW042Z15     4.2" b/w/r
+- GDEW0583T7     5.83" b/w
+- GDEW075T8      7.5" b/w
+- GDEW075T7      7.5" b/w 800x480
+- GDEW075Z09     7.5" b/w/r
+- GDEW075Z08     7.5" b/w/r 800x480
 #### Supported SPI e-paper panels & boards from Waveshare: compare with Good Display, same panel
 #### other supported panels
 - ED060SCT        6" grey levels, on Waveshare e-Paper IT8951 Driver HAT
 
-### Version 1.1.7
+### Version 1.2.1
+- added support for GDEW075T7 7.5" b/w 800x480
+- GDEW075T7 has differential update (1.6s) using a charge balancing waveform
+- added optional SW SPI support, see /extras/sw_spi/README
+- added /extras/tests/GxEPD2_RefreshTests/GxEPD2_RefreshTests.ino, for waveform tuning
+- minor fixes 
+- note that 7.5" e-paper displays don't work reliable if fed from 3.3V Arduino pin
+#### Version 1.2.0
+- added "fast partial update" (differential update) for GDEW0371W7 3.7" b/w 240x416
+- improved differential update waveform for GDEW026T0 2.6" b/w 152x256
+- fixed init code & improved differential update for GDEW042T2 4.2" b/w 300x400
+- note that all differential refresh waveforms are a compromise (ghosting, big font use)
+- parameters for differential waveform for these display can easily be changed for experimenting
+- GDEW042T2 would have greyed background without sustain phase
+- GDEW042T2 needs multiple full refreshes after extended use of partial updates
+#### Version 1.1.10
+- added support for GDEH0213B73 2.13" b/w, replacement for GDE0213B1, GDEH0213B72
+- added support for GDEW026T0 2.6" b/w 152x256
+- added support for GDEW0371W7 3.7" b/w 240x416
+- added support for GDEW075Z08 7.5" b/w/r 800x480
+- GDEW075Z08 does allow (slow) partial update, set usePartialUpdate = false to disable for better image
+- changed 4.2" b/w waveform table, for better result with actual panels
+#### Version 1.1.9
+- note for ESP8266 when using SS for CS: (wiring suggestion) 
+- connect 4.7k pull-down from GPIO15 to GND if your board or shield has level converters
+- fixes for large displays (use uint16_t for buffer index)
+#### Version 1.1.8
+- fix for incomplete download in GxEPD2_WiFi_Example
+- added missing method displayWindow() to GxEPD2_GFX base class
+- fix and clean up of initial refresh for panels with differential update
+- initial refresh needs to be full update, not "fast partial update", for these panels,
+- as the screen content may differ from the "previous buffer" content.
+- add clean of controller buffer(s) on initial write to controller, for partial update.
+#### Version 1.1.7
 - enhanced support for full buffered, non-paged use, for processors with enough RAM
 - use void display(bool partial_update_mode = false); corresponds to update() in  GxEPD
 - use added void displayWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
