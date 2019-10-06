@@ -49,7 +49,7 @@ class GxEPD2_BW : public Adafruit_GFX
   public:
     GxEPD2_Type epd2;
 #if ENABLE_GxEPD2_GFX
-    GxEPD2_BW(GxEPD2_Type epd2_instance) : epd2(epd2_instance), GxEPD2_GFX(epd2, GxEPD2_Type::WIDTH, GxEPD2_Type::HEIGHT)
+    GxEPD2_BW(GxEPD2_Type epd2_instance) : GxEPD2_GFX(epd2_instance, GxEPD2_Type::WIDTH, GxEPD2_Type::HEIGHT), epd2(epd2_instance)
 #else
     GxEPD2_BW(GxEPD2_Type epd2_instance) : Adafruit_GFX(GxEPD2_Type::WIDTH, GxEPD2_Type::HEIGHT), epd2(epd2_instance)
 #endif
